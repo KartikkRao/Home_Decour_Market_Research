@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import csv
 
-# Set up Selenium WebDriver
+
 
 
 
@@ -40,31 +40,29 @@ for links,name in url:
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, "html.parser")
 
-        # Find all the products
+
         products = soup.find_all("div", id="gridItemRoot")
 
-        # Loop through the products and extract the data
+       
         
         for information in products:
 
-            # Extract product name
+            
             name_tag = information.find("div", class_="_cDEzb_p13n-sc-css-line-clamp-3_g3dy1")
             product_name = name_tag.text.strip() if name_tag else "N/A"
 
-            # Extract price
             price_tag = information.find("span", class_="p13n-sc-price")
             product_price =  price_tag.text.strip() if price_tag else "0"
             product_price = product_price[1:] if product_price != "0" else "0"
             
 
 
-            # Extract rating and total reviews
-            rating_tag = information.find("a", title=True)  # Finding <a> tag with title attribute
+            rating_tag = information.find("a", title=True)  
             if rating_tag:
                 rating_text = rating_tag["title"].strip()
-                rating_parts = rating_text.split(" ")  # Splitting "4.3 out of 5 stars, 10,245 ratings"
+                rating_parts = rating_text.split(" ")  
                 product_rating = rating_parts[0]
-                total_reviews = rating_parts[5]  # Extract number part
+                total_reviews = rating_parts[5]  
             else:
                 product_rating = "N/A"
                 total_reviews = "N/A"
@@ -76,12 +74,12 @@ for links,name in url:
         
 csv_filename = "amazon_products1.csv"
 
-# Writing data to CSV
+
 with open(csv_filename, mode="w", encoding="utf-8", newline="") as file:
     writer = csv.writer(file)
 
-    # Write the header row
+   
     writer.writerow(["Product Name", "Category", "Price", "Rating", "Reviews"])
 
-    # Write all product data
+    
     writer.writerows(ans)
